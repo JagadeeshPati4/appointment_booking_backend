@@ -9,6 +9,9 @@ router.post('/register', userController.registerUser);
 // Login a user
 router.post('/login', userController.loginUser);
 
+// get user baseb on token
+router.get('/getUser', userController.getUser);
+
 // Update a user (admin only)
 router.put('/:id', authenticate, authorizeAdmin, userController.updateUser);
 

@@ -8,6 +8,9 @@ router.get('/', appointmentController.getAllAppointments);
 // GET /appointments/:id - Retrieve details for a specific appointment
 router.get('/:id', appointmentController.getAppointmentById);
 
+// GET /appointments/:id - Retrieve details for a specific appointment by user id
+router.get('/user/:userId', appointmentController.getAppointmentsByUserId);
+
 // POST /appointments - Create a new appointment
 router.post('/createAppointment', appointmentController.createAppointment);
 

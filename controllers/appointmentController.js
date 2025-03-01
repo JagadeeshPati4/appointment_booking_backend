@@ -24,7 +24,14 @@ exports.getAppointmentById = async (req, res) => {
 };
 
 exports.createAppointment = async (req, res) => {
-  const { doctorId, date, duration, appointmentType, patientName, notes } = req.body;
+  const { doctorId,userId, date, duration, appointmentType, patientName, notes } = req.body;
+  console.log('doctorId:', doctorId);
+  console.log('userId:', userId); 
+  console.log('date:', date);
+  console.log('duration:', duration);
+  console.log('appointmentType:', appointmentType);
+  console.log('patientName:', patientName);
+  console.log('notes:', notes);
 
   try {
     const doctor = await Doctor.findById(doctorId);
@@ -54,6 +61,7 @@ exports.createAppointment = async (req, res) => {
 
     const appointment = new Appointment({
       doctorId,
+      userId,
       date,
       duration,
       appointmentType,
@@ -69,7 +77,7 @@ exports.createAppointment = async (req, res) => {
 };
 
 exports.updateAppointment = async (req, res) => {
-  const { doctorId, date, duration, appointmentType, patientName, notes } = req.body;
+  const { doctorId,userId, date, duration, appointmentType, patientName, notes } = req.body;
 
   try {
     const appointment = await Appointment.findById(req.params.id);
@@ -104,6 +112,7 @@ exports.updateAppointment = async (req, res) => {
     }
 
     appointment.doctorId = doctorId;
+    appointment.userId = userId;
     appointment.date = date;
     appointment.duration = duration;
     appointment.appointmentType = appointmentType;
@@ -126,6 +135,25 @@ exports.deleteAppointment = async (req, res) => {
 
     await appointment.remove();
     res.json({ message: 'Appointment canceled' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+exports.getAppointmentsByUserId = async (req, res) => {
+  console.log('emtered getAppointmentsByUserId');
+  try {
+    const { userId } = req.params;
+    console.log('userId:', userId);
+    const appointments = await Appointment.find({ userId }).populate('doctorId');
+    console.log('appointments: length', appointments.length);
+    if (!appointments.length) {
+      return res.status(404).json({ message: 'No appointments found for this user' });
+    }
+    
+    res.json(appointments);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
