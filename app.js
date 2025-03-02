@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const connectDB = require('./db');
@@ -8,8 +7,11 @@ const cors = require("cors");
 require('dotenv').config();
 
 const app = express();
+
 const upload = multer({ dest: 'uploads/' });
-app.use(bodyParser.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
 // app.use(cors());
 
 app.use(
